@@ -1,0 +1,23 @@
+%%%
+# Gamma-ray spectrum with ON/OFF background
+
+Fit a power-law amplitude, spectral index, and two background means.
+This synthetic response retains migration losses. Energy is TeV, area cm^2,
+time seconds, and amplitude is measured in units of 1e-8 photons/cm^2/s/TeV.
+%%%
+flatppl_compat = "0.1"
+gamma = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-astro-gamma/1622b09b9c03ee74b364065bb1eafd4c7757e04f/main.flatppl")
+counts = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl")
+energies = [0.5, 1, 2]
+migration = rowstack([[0.7, 0.2, 0], [0.1, 0.6, 0.7]])
+amplitude ~ Gamma(2, 2)
+spectral_index ~ Normal(2, 0.4)
+first_background ~ Gamma(2, 1)
+second_background ~ Gamma(3, 1)
+flux = gamma.powerlaw.(energies, amplitude * 1e-8, spectral_index, 1)
+attenuated = flux .* gamma.ebl_transmission.([0.05, 0.2, 0.5], 0.8)
+source_counts = gamma.fold_spectrum(migration, [1e5, 2e5, 3e5], attenuated, [0.5, 0.75, 1], 1e4)
+first_bin ~ counts.onoff(source_counts[1], first_background, 4)
+second_bin ~ counts.onoff(source_counts[2], second_background, 4)
+model = lawof(record(amplitude = amplitude, spectral_index = spectral_index, first_background = first_background, second_background = second_background, first_bin = first_bin, second_bin = second_bin))
+Pi_post = restrict(model, record(first_bin = record(on = 7, off = 8), second_bin = record(on = 8, off = 12)))
