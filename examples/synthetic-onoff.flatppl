@@ -7,7 +7,7 @@ area is cm^2, time is seconds, and photon flux is cm^-2 s^-1 TeV^-1.
 flatppl_compat = "0.1"
 astro_gamma = load_module("../main.flatppl")
 counts = load_module(
-  "https://raw.githubusercontent.com/BJMCox/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl",
+  "https://raw.githubusercontent.com/flatppl-community/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl",
 )
 # True-energy quadrature; migration columns retain probability loss.
 energies = [0.5, 1.0, 2.0]

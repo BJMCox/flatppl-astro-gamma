@@ -6,8 +6,8 @@ This synthetic response retains migration losses. Energy is TeV, area cm^2,
 time seconds, and amplitude is measured in units of 1e-8 photons/cm^2/s/TeV.
 %%%
 flatppl_compat = "0.1"
-gamma = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-astro-gamma/1622b09b9c03ee74b364065bb1eafd4c7757e04f/main.flatppl")
-counts = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl")
+gamma = load_module("https://raw.githubusercontent.com/flatppl-community/flatppl-astro-gamma/1622b09b9c03ee74b364065bb1eafd4c7757e04f/main.flatppl")
+counts = load_module("https://raw.githubusercontent.com/flatppl-community/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl")
 energies = [0.5, 1, 2]
 migration = rowstack([[0.7, 0.2, 0], [0.1, 0.6, 0.7]])
 amplitude ~ Gamma(2, 2)

@@ -14,7 +14,7 @@ for (const name of ['stats-templates', 'stats-counts']) {
 }
 function applyOverrides(source) {
   for (const [name, checkout] of Object.entries(overrides)) {
-    source = source.replaceAll(new RegExp('https://raw\\.githubusercontent\\.com/BJMCox/flatppl-' + name + '/[^/]+/main\\.flatppl', 'g'), path.join(checkout, 'main.flatppl'));
+    source = source.replaceAll(new RegExp('https://raw\\.githubusercontent\\.com/flatppl-community/flatppl-' + name + '/[^/]+/main\\.flatppl', 'g'), path.join(checkout, 'main.flatppl'));
   }
   return source;
 }

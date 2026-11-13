@@ -3,7 +3,7 @@
 Version **0.1**. FlatPPL functions for gamma-ray photon spectra, EBL attenuation,
 response-folded source counts, and density-coordinate Jacobians.
 
-Run the [posterior example](https://live.flatppl.org/#model=https%3A%2F%2Fraw.githubusercontent.com%2FBJMCox%2Fflatppl-astro-gamma%2Fmain%2Fexamples%2Fplayground.flatppl&target=Pi_post) in the live playground. It loads its library modules from GitHub.
+Run the [posterior example](https://live.flatppl.org/#model=https%3A%2F%2Fraw.githubusercontent.com%2Fflatppl-community%2Fflatppl-astro-gamma%2Fmain%2Fexamples%2Fplayground.flatppl&target=Pi_post) in the live playground. It loads its library modules from GitHub.
 
 ```flatppl
 flatppl_compat = "0.1"
@@ -19,9 +19,9 @@ Its invented response is **synthetic**; it is not a reproduction of public MAGIC
 
 Spectral amplitude is the differential flux at the reference energy. Curvature
 uses natural logarithms. Folding imports `project` from
-[flatppl-stats-templates](https://github.com/BJMCox/flatppl-stats-templates);
+[flatppl-stats-templates](https://github.com/flatppl-community/flatppl-stats-templates);
 the example imports the ON/OFF law from
-[flatppl-stats-counts](https://github.com/BJMCox/flatppl-stats-counts).
+[flatppl-stats-counts](https://github.com/flatppl-community/flatppl-stats-counts).
 Neither library supplies an implicit prior. Source dependencies use commit-pinned URLs.
 
 Response rows are retained reconstructed bins; columns are true-energy quadrature
