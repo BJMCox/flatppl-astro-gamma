@@ -1,0 +1,56 @@
+%%%
+# Synthetic gamma-ray counts
+
+This small response is invented, not a published MAGIC analysis. Energy is TeV,
+area is cm^2, time is seconds, and photon flux is cm^-2 s^-1 TeV^-1.
+%%%
+flatppl_compat = "0.1"
+astro_gamma = load_module("../main.flatppl")
+counts = load_module(
+  "https://raw.githubusercontent.com/BJMCox/flatppl-stats-counts/9acbadf4b280b6ad92425f6f367d2fc49f08beba/main.flatppl",
+)
+# True-energy quadrature; migration columns retain probability loss.
+energies = [0.5, 1.0, 2.0]
+quadrature_weights = [0.5, 0.75, 1.0]
+effective_area = [100000.0, 200000.0, 300000.0]
+migration = rowstack([[0.7, 0.2, 0.0], [0.1, 0.6, 0.7]])
+optical_depth = [0.05, 0.2, 0.5]
+exposure = 10000.0
+reference_energy = 1.0
+index = 2.0
+ebl_scale = 0.8
+background = [2.0, 3.0]
+off_on_ratio = 4.0
+on_data = [7, 8]
+off_data = [8, 12]
+predict(amplitude) = astro_gamma.fold_spectrum(migration, effective_area,
+    astro_gamma.powerlaw.(energies, amplitude, index, reference_energy)
+    .* astro_gamma.ebl_transmission.(optical_depth, ebl_scale), quadrature_weights, exposure)
+# Explicit proper Gamma(shape, rate) prior: mean 1e-8 in the stated flux unit.
+amplitude ~ Gamma(2.0, 200000000.0)
+expected_source = predict(amplitude)
+bin1 ~ counts.onoff(expected_source[1], background[1], off_on_ratio)
+bin2 ~ counts.onoff(expected_source[2], background[2], off_on_ratio)
+observed = record(
+  bin1 = record(on = on_data[1], off = off_data[1]),
+  bin2 = record(on = on_data[2], off = off_data[2]),
+)
+joint_model = lawof(record(amplitude = amplitude, bin1 = bin1, bin2 = bin2))
+posterior = restrict(joint_model, observed)
+# Checked physical point; posterior is unnormalized.
+amplitude_point = 0.00000001
+source_counts = predict(amplitude_point)
+point_bin1 = counts.onoff(source_counts[1], background[1], off_on_ratio)
+point_bin2 = counts.onoff(source_counts[2], background[2], off_on_ratio)
+point_observation = joint(bin1 = point_bin1, bin2 = point_bin2)
+log_likelihood_point = logdensityof(point_observation, observed)
+log_posterior_point = logdensityof(posterior, record(amplitude = amplitude_point))
+# Compiled query keeps its input distinct from the model stochastic node.
+query_amplitude = elementof(nonnegreals)
+query_source = predict(query_amplitude)
+inputs = query_amplitude
+outputs = [
+  query_source[1],
+  query_source[2],
+  logdensityof(posterior, record(amplitude = query_amplitude)),
+]
