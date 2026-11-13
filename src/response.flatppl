@@ -1,0 +1,16 @@
+%%%
+# Gamma-ray response folding
+
+Migration arrays contain reconstructed-bin probabilities, with rows for retained
+reconstructed bins and columns for true-energy quadrature nodes. Keep losses.
+%%%
+flatppl_compat = "0.1"
+templates = load_module("https://raw.githubusercontent.com/BJMCox/flatppl-stats-templates/314b0ced8ccd5ce320888cd643c3188c2510ba56/main.flatppl")
+
+fold_spectrum(migration_probabilities, effective_area, flux, quadrature_weights, exposure) = (
+    exposure * templates.project(migration_probabilities, effective_area .* flux, quadrature_weights)
+)
+
+migration_density_to_energy_density(density, true_energy) = density ./ true_energy
+
+energy_scale_density(density_at_scaled_coordinate, scale) = density_at_scaled_coordinate ./ scale

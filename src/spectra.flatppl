@@ -1,0 +1,45 @@
+%%%
+# Differential photon spectra
+
+Energies share one positive energy unit. Amplitudes are differential photon
+fluxes at the reference energy, with no normalization over an energy domain.
+%%%
+flatppl_compat = "0.1"
+
+powerlaw(energy, amplitude, index, reference_energy) = (
+    amplitude * exp(-index * log(energy / reference_energy))
+)
+
+logparabola(energy, amplitude, index, curvature, reference_energy) = (
+    amplitude * exp(-index * log(energy / reference_energy)
+        - curvature * log(energy / reference_energy) ^ 2)
+)
+
+cutoff_powerlaw(energy, amplitude, index, cutoff_energy, cutoff_power, reference_energy) = (
+    amplitude * exp(-index * log(energy / reference_energy)
+        - (energy / cutoff_energy) ^ cutoff_power
+        + (reference_energy / cutoff_energy) ^ cutoff_power)
+)
+
+# Series through x^5: at |x| < 1e-4 the omitted term is below 2e-28.
+# Guard the inactive denominator too: AD must never encounter 0/0.
+_exprel(x) = ifelse(abs(x) < 0.0001,
+    1 + x * (1 / 2 + x * (1 / 6 + x * (1 / 24 + x * (1 / 120 + x / 720)))),
+    expm1(x) / ifelse(abs(x) < 0.0001, 1.0, x))
+
+_powerlaw_integral(lower_energy, upper_energy, amplitude, index, reference_energy, moment) = (
+    amplitude * lower_energy ^ moment
+    * exp(-index * log(lower_energy / reference_energy))
+    * log1p((upper_energy - lower_energy) / lower_energy)
+    * _exprel((moment - index) * log1p((upper_energy - lower_energy) / lower_energy))
+)
+
+powerlaw_photon_integral(lower_energy, upper_energy, amplitude, index, reference_energy) = (
+    _powerlaw_integral(lower_energy, upper_energy, amplitude, index, reference_energy, 1)
+)
+
+powerlaw_energy_integral(lower_energy, upper_energy, amplitude, index, reference_energy) = (
+    _powerlaw_integral(lower_energy, upper_energy, amplitude, index, reference_energy, 2)
+)
+
+ebl_transmission(optical_depth, scale) = exp(-scale * optical_depth)

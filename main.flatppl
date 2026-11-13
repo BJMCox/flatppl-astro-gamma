@@ -1,0 +1,17 @@
+%%%
+# Gamma-ray spectra and telescope responses
+
+Physical flux helpers; priors and observation laws belong to the caller.
+%%%
+flatppl_compat = "0.1"
+spectra = load_module("src/spectra.flatppl")
+response = load_module("src/response.flatppl")
+powerlaw = spectra.powerlaw
+logparabola = spectra.logparabola
+cutoff_powerlaw = spectra.cutoff_powerlaw
+powerlaw_photon_integral = spectra.powerlaw_photon_integral
+powerlaw_energy_integral = spectra.powerlaw_energy_integral
+ebl_transmission = spectra.ebl_transmission
+fold_spectrum = response.fold_spectrum
+migration_density_to_energy_density = response.migration_density_to_energy_density
+energy_scale_density = response.energy_scale_density
