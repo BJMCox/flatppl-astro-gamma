@@ -1,4 +1,6 @@
-# Function reference — 0.1
+# Gamma-ray astronomy reference
+
+Library version **0.1** · [Package overview](../README.md)
 
 Load `main.flatppl` and call these fields. Scalar spectrum functions may be
 broadcast explicitly with `f.(...)`. All energies share one positive energy unit;

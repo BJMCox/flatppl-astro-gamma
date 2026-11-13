@@ -1,5 +1,7 @@
 # flatppl-astro-gamma
 
+[Function reference](docs/reference.md)
+
 Version **0.1**. FlatPPL functions for gamma-ray photon spectra, EBL attenuation,
 response-folded source counts, and density-coordinate Jacobians.
 
